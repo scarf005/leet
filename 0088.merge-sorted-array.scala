@@ -12,4 +12,3 @@ object Solution:
                 case (_, Some(y))                => xs(k) = y; go(i, j - 1, k - 1)
                 case _                           =>
         go()
-

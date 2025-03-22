@@ -16,8 +16,13 @@ object Solution:
         }
         .get - 1
 
-@main def main() =
-    println(Solution.maxHeightOfTriangle(2, 4))
-    println(Solution.maxHeightOfTriangle(2, 1))
-    println(Solution.maxHeightOfTriangle(1, 1))
-    println(Solution.maxHeightOfTriangle(10, 1))
+import munit.FunSuite
+
+class Suite extends FunSuite:
+    import Solution.*
+
+    test("cases"):
+        assertEquals(maxHeightOfTriangle(2, 4), 3)
+        assertEquals(maxHeightOfTriangle(2, 1), 2)
+        assertEquals(maxHeightOfTriangle(1, 1), 1)
+        assertEquals(maxHeightOfTriangle(10, 1), 2)

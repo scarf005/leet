@@ -18,7 +18,12 @@ object Solution:
 
         runs.filter(_._2 == runs.values.max).keys.toList.sorted
 
-@main def main() =
+import munit.FunSuite
+
+class Suite extends FunSuite:
     import Solution.*
-    println(mostVisited(4, Array(1, 3, 1, 2)))
-    println(mostVisited(2, Array(2, 1, 2, 1, 2, 1, 2, 1, 2)))
+
+    test("cases"):
+        assertEquals(mostVisited(4, Array(1, 3, 1, 2)), List(1, 2))
+        assertEquals(mostVisited(2, Array(2, 1, 2, 1, 2, 1, 2, 1, 2)), List(2))
+        assertEquals(mostVisited(7, Array(1, 3, 5, 7)), (1 to 7).toList)

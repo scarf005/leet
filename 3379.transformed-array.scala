@@ -5,7 +5,11 @@ object Solution:
         val s = nums.size
         nums.indices.toArray.map { i => nums(((i + nums(i)) % s + s) % s) }
 
-@main def main() =
+import munit.FunSuite
+
+class Suite extends FunSuite:
     import Solution.*
-    println(constructTransformedArray(Array(3, -2, 1, 1)).toVector)
-    println(constructTransformedArray(Array(-1, 4, -1)).toVector)
+
+    test("cases"):
+        assertEquals(constructTransformedArray(Array(3, -2, 1, 1)).toVector, Vector(1, 1, 1, 3))
+        assertEquals(constructTransformedArray(Array(-1, 4, -1)).toVector, Vector(-1, -1, 4))

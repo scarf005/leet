@@ -10,7 +10,11 @@ object Solution:
         }
         sb.toString
 
-@main def main() =
+import munit.FunSuite
+
+class Suite extends FunSuite:
     import Solution.*
-    println(clearDigits("cb34"))
-    println(clearDigits("abc"))
+
+    test("cases"):
+        assertEquals(clearDigits("abc"), "abc")
+        assertEquals(clearDigits("cb34"), "")

@@ -14,7 +14,11 @@ object Solution:
         val sum = nums.take(sequential(0)).sum
         Iterator.from(sum).find(!set(_)).get
 
-@main def main() =
+import munit.FunSuite
+
+class Suite extends FunSuite:
     import Solution.*
-    println(missingInteger(Array(1, 2, 3, 2, 5)))
-    println(missingInteger(Array(4, 5, 6, 7, 8, 8, 9, 4, 3, 2, 7)))
+
+    test("cases"):
+        assertEquals(missingInteger(Array(1, 2, 3, 2, 5)), 6)
+        assertEquals(missingInteger(Array(3, 4, 5, 1, 12, 14, 13)), 15)

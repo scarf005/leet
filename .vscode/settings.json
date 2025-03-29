@@ -1,6 +1,9 @@
 {
-  "files.watcherExclude": {
-    "**/target": true
-  },
-  "github.copilot.editor.enableAutoCompletions": false
+    "files.watcherExclude": {
+        "**/target": true
+    },
+    "[scala]": {
+        "editor.indentSize": "tabSize"
+    },
+    "github.copilot.editor.enableAutoCompletions": false
 }

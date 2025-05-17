@@ -1,6 +1,11 @@
 {
+  "[scala]": {
+    "editor.tabSize": 4
+  },
   "files.watcherExclude": {
     "**/target": true
   },
-  "github.copilot.editor.enableAutoCompletions": false
+  "github.copilot.enable": {
+    "scala": false
+  }
 }

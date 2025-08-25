@@ -2,7 +2,7 @@ package leet.`3335`
 
 object Solution:
     inline val MOD = 1_000_000_007
-    extension (inline a: Int) inline def +% (inline b: Int): Int = (a + b) % MOD
+    extension (inline a: Int) inline def +%(inline b: Int): Int = (a + b) % MOD
 
     val as: Vector[Int] =
         lazy val xs: LazyList[Int] = LazyList.fill(26)(1) #::: (xs `zip` xs.drop(1)).map(_ +% _)

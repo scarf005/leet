@@ -1,0 +1,127 @@
+#!/usr/bin/env -S deno run -W --allow-net=leetcode.com
+import { Command } from "@cliffy/command"
+
+interface CodeSnippet {
+  lang: string
+  langSlug: string
+  code: string
+}
+interface Question {
+  questionFrontendId: number
+  title: string
+  titleSlug: string
+  exampleTestcaseList: string[]
+  metaData: string
+  codeSnippets: CodeSnippet[]
+}
+const queryQuestion = async (titleSlug: string) => {
+  const graphqlQuery = /*graphql*/ `
+    query {
+      question(titleSlug: "${titleSlug}")
+        {
+          questionFrontendId
+          title
+          titleSlug
+          exampleTestcaseList
+          metaData
+          codeSnippets {
+            lang
+            langSlug
+            code
+          }
+        }
+    }
+    `
+
+  const response = await fetch("https://leetcode.com/graphql", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Referer": "https://leetcode.com",
+    },
+    body: JSON.stringify({ query: graphqlQuery }),
+  })
+  const json = await response.json()
+  return json.data.question as Question
+}
+const queryDailyQuestion = async () => {
+  const graphqlQuery = /*graphql*/ `
+    query questionOfToday {
+      activeDailyCodingChallengeQuestion {
+        question {
+          questionFrontendId
+          title
+          titleSlug
+          exampleTestcaseList
+          metaData
+          codeSnippets {
+            lang
+            langSlug
+            code
+          }
+        }
+      }
+    }
+  `
+  const response = await fetch("https://leetcode.com/graphql", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Referer": "https://leetcode.com",
+    },
+    body: JSON.stringify({ query: graphqlQuery }),
+  })
+  const json = await response.json()
+  return json.data.activeDailyCodingChallengeQuestion.question as Question
+}
+
+export const tryParseURL = (url: string | URL) => {
+  try {
+    return new URL(url)
+  } catch {
+    return undefined
+  }
+}
+
+export const extractProblemName = (url: string | URL) => {
+  const parsed = tryParseURL(url)
+  if (!parsed) return undefined
+  if (parsed.hostname !== "leetcode.com") return undefined
+
+  const matchResult = /problems\/(?<problem>[^/]+)\/.*/.exec(parsed.pathname)
+  if (!matchResult?.groups) return undefined
+  return matchResult.groups.problem
+}
+
+if (import.meta.main) {
+  const { args: [url] } = await new Command()
+    .name("fetch")
+    .description(
+      "Fetch a problem from LeetCode and create a boilerplate file. If no URL is given, fetch the daily problem.",
+    )
+    .arguments("[url:string]")
+    .parse(Deno.args)
+
+  const question =
+    await (url ? queryQuestion(extractProblemName(url)!) : queryDailyQuestion())
+
+  const id = question.questionFrontendId.toString().padStart(4, "0")
+  const scala = question.codeSnippets.find((s) => s.lang === "Scala")
+
+  await Deno.writeTextFile(
+    `${id}.${question.titleSlug}.scala`,
+    `package leet.\`${id}\`
+
+${scala?.code}
+
+import munit.FunSuite
+
+class Suite extends FunSuite:
+    import Solution.*
+
+    // ${question.exampleTestcaseList}
+    test("cases"):
+        ???
+`,
+  )
+}

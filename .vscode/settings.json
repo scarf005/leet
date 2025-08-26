@@ -7,8 +7,5 @@
   },
   "files.watcherExclude": {
     "**/target": true
-  },
-  "github.copilot.enable": {
-    "scala": false
-  }
+}
 }

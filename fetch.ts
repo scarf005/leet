@@ -1,5 +1,6 @@
 #!/usr/bin/env -S deno run -W --allow-net=leetcode.com
 import { Command } from "@cliffy/command"
+import { green } from "@std/fmt/colors"
 
 interface CodeSnippet {
   lang: string
@@ -107,9 +108,9 @@ if (import.meta.main) {
 
   const id = question.questionFrontendId.toString().padStart(4, "0")
   const scala = question.codeSnippets.find((s) => s.lang === "Scala")
-
+  const path = `${id}.${question.titleSlug}.scala`
   await Deno.writeTextFile(
-    `${id}.${question.titleSlug}.scala`,
+    path,
     `package leet.\`${id}\`
 
 ${scala?.code}
@@ -124,4 +125,5 @@ class Suite extends FunSuite:
         ???
 `,
   )
+  console.log(`Created ${green(path)}`)
 }

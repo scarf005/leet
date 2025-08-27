@@ -6,6 +6,7 @@
     "jsr:@cliffy/internal@1.0.0-rc.8": "1.0.0-rc.8",
     "jsr:@cliffy/table@1.0.0-rc.8": "1.0.0-rc.8",
     "jsr:@std/assert@1": "1.0.13",
+    "jsr:@std/fmt@^1.0.8": "1.0.8",
     "jsr:@std/fmt@~1.0.2": "1.0.8",
     "jsr:@std/internal@^1.0.6": "1.0.6",
     "jsr:@std/text@~1.0.7": "1.0.15",
@@ -18,7 +19,7 @@
         "jsr:@cliffy/flags",
         "jsr:@cliffy/internal",
         "jsr:@cliffy/table",
-        "jsr:@std/fmt",
+        "jsr:@std/fmt@~1.0.2",
         "jsr:@std/text"
       ]
     },
@@ -34,7 +35,7 @@
     "@cliffy/table@1.0.0-rc.8": {
       "integrity": "8bbcdc2ba5e0061b4b13810a24e6f5c6ab19c09f0cce9eb691ccd76c7c6c9db5",
       "dependencies": [
-        "jsr:@std/fmt"
+        "jsr:@std/fmt@~1.0.2"
       ]
     },
     "@std/assert@1.0.13": {
@@ -67,7 +68,8 @@
   "workspace": {
     "dependencies": [
       "jsr:@cliffy/command@1.0.0-rc.8",
-      "jsr:@std/assert@1"
+      "jsr:@std/assert@1",
+      "jsr:@std/fmt@^1.0.8"
     ]
   }
 }

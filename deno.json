@@ -3,7 +3,7 @@
     "semiColons": false
   },
   "tasks": {
-    "dev": "deno run --watch main.ts"
+    "test": "scala test --watch project.scala"
   },
   "imports": {
     "@cliffy/command": "jsr:@cliffy/command@1.0.0-rc.8",

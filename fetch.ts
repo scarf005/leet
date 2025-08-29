@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run -W --allow-net=leetcode.com
 import { Command } from "@cliffy/command"
-import { green } from "@std/fmt/colors"
+import { gray, green } from "@std/fmt/colors"
 
 interface CodeSnippet {
   lang: string
@@ -103,12 +103,12 @@ if (import.meta.main) {
     .arguments("[url:string]")
     .parse(Deno.args)
 
-  const question =
+  const { questionFrontendId, codeSnippets, titleSlug } =
     await (url ? queryQuestion(extractProblemName(url)!) : queryDailyQuestion())
 
-  const id = question.questionFrontendId.toString().padStart(4, "0")
-  const scala = question.codeSnippets.find((s) => s.lang === "Scala")
-  const path = `${id}.${question.titleSlug}.scala`
+  const id = questionFrontendId.toString().padStart(4, "0")
+  const scala = codeSnippets.find((s) => s.lang === "Scala")
+  const path = `${id}.${titleSlug}.scala`
   await Deno.writeTextFile(
     path,
     `package leet.\`${id}\`
@@ -119,11 +119,20 @@ import munit.FunSuite
 
 class Suite extends FunSuite:
     import Solution.*
+    import upickle.default.*
 
-    // ${question.exampleTestcaseList}
-    test("cases"):
+    // type Input = ???
+    List(
+    ).foreach { case (input, expected) =>
+        // val input = read[Input](input)
+        // test(s"<<name>>($input)"):
+        //     assertEquals(<<name>>(grid), expected)
         ???
+    }
 `,
   )
-  console.log(`Created ${green(path)}`)
+  console.log(`\
+Fetched ${gray(`https://leetcode.com/problems/${titleSlug}`)}
+Created ${green(path)}
+`)
 }

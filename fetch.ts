@@ -1,6 +1,7 @@
 #!/usr/bin/env -S deno run -W --allow-net=leetcode.com
 import { Command } from "@cliffy/command"
 import { gray, green } from "@std/fmt/colors"
+import { dedent } from "@std/text/unstable-dedent"
 
 interface CodeSnippet {
   lang: string
@@ -111,28 +112,29 @@ if (import.meta.main) {
   const path = `${id}.${titleSlug}.scala`
   await Deno.writeTextFile(
     path,
-    `package leet.\`${id}\`
+    dedent`
+      package leet.\`${id}\`
 
-${scala?.code}
+      ${scala?.code}
 
-import munit.FunSuite
+      import munit.FunSuite
 
-class Suite extends FunSuite:
-    import Solution.*
-    import upickle.default.*
+      class Suite extends FunSuite:
+          import Solution.*
+          import upickle.default.*
 
-    // type Input = ???
-    List(
-    ).foreach { case (input, expected) =>
-        // val input = read[Input](input)
-        // test(s"<<name>>($input)"):
-        //     assertEquals(<<name>>(grid), expected)
-        ???
-    }
-`,
+          // type Input = ???
+          List(
+          ).foreach { case (input, expected) =>
+              // val input = read[Input](input)
+              // test(s"<<name>>($input)"):
+              //     assertEquals(<<name>>(grid), expected)
+              ???
+          }
+      `,
   )
-  console.log(`\
-Fetched ${gray(`https://leetcode.com/problems/${titleSlug}`)}
-Created ${green(path)}
-`)
+  console.log(dedent`
+    Fetched ${gray(`https://leetcode.com/problems/${titleSlug}`)}
+    Created ${green(path)}
+  `)
 }

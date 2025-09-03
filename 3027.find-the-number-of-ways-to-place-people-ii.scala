@@ -1,4 +1,4 @@
-package leet.`3025`
+package leet.`3027`
 
 object Solution:
     extension (inline b: Boolean) inline def toInt = if b then 1 else 0

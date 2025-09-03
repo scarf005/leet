@@ -3,4 +3,4 @@
 
 //> using toolkit 0.7.0
 //> using dep org.scalameta::munit:1.1.1
-//> using dep com.lihaoyi::upickle:4.2.1
+//> using dep com.lihaoyi::upickle:4.3.0

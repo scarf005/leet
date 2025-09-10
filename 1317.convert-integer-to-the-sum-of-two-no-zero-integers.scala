@@ -16,11 +16,10 @@ class Suite extends ScalaCheckSuite:
     import org.scalacheck.Prop.*
     import org.scalacheck.Gen
 
-    val validN: Gen[Int] = Gen.choose(2, math.pow(10, 4).toInt)
+    val validN = Gen.choose(2, math.pow(10, 4).toInt)
 
-    property("getNoZeroIntegers"):
-        forAll(validN) { n =>
-            val res = getNoZeroIntegers(n)
-            assertEquals(res.sum, n, res.toSeq.toString)
-            assert(!res.exists(_.hasZeros), res.toSeq.toString)
-        }
+    property("getNoZeroIntegers") = forAll(validN) { n =>
+        val res = getNoZeroIntegers(n)
+        assertEquals(res.sum, n, res.toSeq)
+        assert(!res.exists(_.hasZeros), res.toSeq)
+    }

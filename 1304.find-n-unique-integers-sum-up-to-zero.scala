@@ -3,15 +3,17 @@ package leet.`1304`
 object Solution:
     def sumZero(n: Int): Array[Int] = (0 until n).iterator.map(i => i * 2 - n + 1).toArray
 
-import munit.FunSuite
+import munit.ScalaCheckSuite
 
-class Suite extends FunSuite:
+class Suite extends ScalaCheckSuite:
     import Solution.*
-    import upickle.default.*
+    import org.scalacheck.Gen
+    import org.scalacheck.Prop.*
 
-    List(5, 3, 1).foreach { case (input) =>
-        test(s"sumZero($input)"):
-            val res = sumZero(input)
-            assertEquals(res.sum, 0)
-            assertEquals(res.distinct.size, input)
+    val validN = Gen.choose(1, 1000)
+
+    property("sumZero") = forAll(validN) { n =>
+        val res = sumZero(n)
+        assertEquals(res.sum, 0, res.toSeq)
+        assertEquals(res.distinct.size, n, res.toSeq)
     }

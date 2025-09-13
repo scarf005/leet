@@ -19,8 +19,6 @@ class Suite extends FunSuite:
       (input = (3L, -2L), expected = 3),
       (input = (5L, 7L), expected = -1),
     ).foreach { case ((a, b), expected) =>
-        test(s"makeTheIntegerZero($a, $b) = $expected") {
+        test(s"makeTheIntegerZero($a, $b) = $expected"):
             assertEquals(makeTheIntegerZero(a, b), expected)
-        }
-
     }

@@ -1,7 +1,8 @@
-#!/usr/bin/env -S deno run -W --allow-net=leetcode.com
+#!/usr/bin/env -S deno run -RW --allow-run --allow-env --allow-net=leetcode.com
 import { Command } from "@cliffy/command"
 import { gray, green } from "@std/fmt/colors"
 import { dedent } from "@std/text/unstable-dedent"
+import { open } from "@opensrc/deno-open"
 
 interface CodeSnippet {
   lang: string
@@ -95,15 +96,7 @@ export const extractProblemName = (url: string | URL) => {
   return matchResult.groups.problem
 }
 
-if (import.meta.main) {
-  const { args: [url] } = await new Command()
-    .name("fetch")
-    .description(
-      "Fetch a problem from LeetCode and create a boilerplate file. If no URL is given, fetch the daily problem.",
-    )
-    .arguments("[url:string]")
-    .parse(Deno.args)
-
+const fetchProblem = async (url?: string) => {
   const { questionFrontendId, codeSnippets, titleSlug } =
     await (url ? queryQuestion(extractProblemName(url)!) : queryDailyQuestion())
 
@@ -132,9 +125,34 @@ if (import.meta.main) {
               ???
           }
       `,
+    { createNew: true },
   )
   console.log(dedent`
     Fetched ${gray(`https://leetcode.com/problems/${titleSlug}`)}
     Created ${green(path)}
   `)
+}
+
+const openInBrowser = async (path: string) => {
+  const regex = /^\d+\.(?<slug>.+)\.scala$/
+  const slug = regex.exec(path)?.groups?.slug
+  if (!slug) return
+  await open(`https://leetcode.com/problems/${slug}`)
+}
+
+if (import.meta.main) {
+  const open = new Command()
+    .description("Open the problem in browser.")
+    .arguments("<path:string>")
+    .action(async (_, path) => await openInBrowser(path))
+
+  await new Command()
+    .name("fetch")
+    .description(
+      "Fetch a problem from LeetCode and create a boilerplate file. If no URL is given, fetch the daily problem.",
+    )
+    .arguments("[url:string]")
+    .action(async (_, url) => await fetchProblem(url))
+    .command("open", open)
+    .parse(Deno.args)
 }

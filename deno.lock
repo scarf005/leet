@@ -15,7 +15,8 @@
     "jsr:@std/regexp@^1.0.1": "1.0.1",
     "jsr:@std/text@^1.0.16": "1.0.16",
     "jsr:@std/text@~1.0.7": "1.0.16",
-    "npm:@types/node@*": "24.2.0"
+    "npm:@types/node@*": "24.2.0",
+    "npm:graphql-mobius@~0.1.13": "0.1.13"
   },
   "jsr": {
     "@cliffy/command@1.0.0-rc.8": {
@@ -93,6 +94,9 @@
         "undici-types"
       ]
     },
+    "graphql-mobius@0.1.13": {
+      "integrity": "sha512-GFTHB9VUnYaKI5cNjadYnVgsH2AqW4//0UTpZlzHq2BpErbqzy+EZn8rFXIus/jLyYv3fFqbuzbNJV8AygSeJA=="
+    },
     "undici-types@7.10.0": {
       "integrity": "sha512-t5Fy/nfn+14LuOc2KNYg75vZqClpAiqscVvMygNnlsHBFpSXdJaYtXMcdNLpl/Qvc3P2cB3s6lOV51nqsFq4ag=="
     }
@@ -103,7 +107,8 @@
       "jsr:@opensrc/deno-open@1",
       "jsr:@std/assert@1",
       "jsr:@std/fmt@^1.0.8",
-      "jsr:@std/text@^1.0.16"
+      "jsr:@std/text@^1.0.16",
+      "npm:graphql-mobius@~0.1.13"
     ]
   }
 }

@@ -3,80 +3,46 @@ import { Command } from "@cliffy/command"
 import { gray, green } from "@std/fmt/colors"
 import { dedent } from "@std/text/unstable-dedent"
 import { open } from "@opensrc/deno-open"
+import { Mobius } from "graphql-mobius"
 
-interface CodeSnippet {
-  lang: string
-  langSlug: string
-  code: string
-}
-interface Question {
-  questionFrontendId: number
-  title: string
-  titleSlug: string
-  exampleTestcaseList: string[]
-  metaData: string
-  codeSnippets: CodeSnippet[]
-}
-const queryQuestion = async (titleSlug: string) => {
-  const graphqlQuery = /*graphql*/ `
-    query {
-      question(titleSlug: "${titleSlug}")
-        {
-          questionFrontendId
-          title
-          titleSlug
-          exampleTestcaseList
-          metaData
-          codeSnippets {
-            lang
-            langSlug
-            code
-          }
-        }
-    }
-    `
+const typeDefs = /* GraphQL */ `
+  type CodeSnippet {
+    lang: String!
+    langSlug: String!
+    code: String!
+  }
+  type Question {
+    questionFrontendId: String!
+    title: String!
+    titleSlug: String!
+    exampleTestcaseList: [String!]!
+    metaData: String!
+    codeSnippets: [CodeSnippet!]!
+  }
+  type DailyQuestion {
+    question: Question!
+  }
+  type Query {
+    question(titleSlug: String!): Question!
+    activeDailyCodingChallengeQuestion(): DailyQuestion!
+  }
+`
 
-  const response = await fetch("https://leetcode.com/graphql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Referer": "https://leetcode.com",
-    },
-    body: JSON.stringify({ query: graphqlQuery }),
-  })
-  const json = await response.json()
-  return json.data.question as Question
-}
-const queryDailyQuestion = async () => {
-  const graphqlQuery = /*graphql*/ `
-    query questionOfToday {
-      activeDailyCodingChallengeQuestion {
-        question {
-          questionFrontendId
-          title
-          titleSlug
-          exampleTestcaseList
-          metaData
-          codeSnippets {
-            lang
-            langSlug
-            code
-          }
-        }
-      }
-    }
-  `
-  const response = await fetch("https://leetcode.com/graphql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Referer": "https://leetcode.com",
-    },
-    body: JSON.stringify({ query: graphqlQuery }),
-  })
-  const json = await response.json()
-  return json.data.activeDailyCodingChallengeQuestion.question as Question
-}
+const question = {
+  titleSlug: true,
+  questionFrontendId: true,
+  codeSnippets: { code: true, lang: true },
+} as const
+
+const client = new Mobius({ url: "https://leetcode.com/graphql", typeDefs })
+
+const queryQuestion = (titleSlug: string) =>
+  client.query({ question: { where: { titleSlug }, select: question } })
+    .then((res) => res!.question)
+
+const queryDailyQuestion = () =>
+  client.query({ activeDailyCodingChallengeQuestion: { select: { question } } })
+    .then((res) => res!.activeDailyCodingChallengeQuestion.question)
 
 export const tryParseURL = (url: string | URL) => {
   try {

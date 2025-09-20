@@ -56,10 +56,10 @@ class Suite extends FunSuite:
               read[Array[String]](init(1).toString),
               read[Array[Int]](init(2).toString),
             )
-            (task zip (value zip expected)).tail.foreach {
-                case ("highestRated", (ujson.Arr(arr), Some(str))) =>
+            (task lazyZip value lazyZip expected).tail.foreach {
+                case ("highestRated", ujson.Arr(arr), Some(str)) =>
                     assertEquals(obj.highestRated(arr.head.str), str)
-                case ("changeRating", (ujson.Arr(arr), _)) =>
+                case ("changeRating", ujson.Arr(arr), _) =>
                     obj.changeRating(arr(0).str, arr(1).num.toInt)
                 case _ =>
             }

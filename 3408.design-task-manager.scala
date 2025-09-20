@@ -61,13 +61,13 @@ class Suite extends FunSuite:
 
             val initValue = read[List[List[Int]]](value.head.arr.head.toString)
             val manager = TaskManager(initValue)
-            (task zip (value zip expected)).tail.foreach {
-                case ("add", (ujson.Arr(arr), _)) =>
+            (task lazyZip value lazyZip expected).tail.foreach {
+                case ("add", Arr(arr), _) =>
                     manager.add(arr(0).num.toInt, arr(1).num.toInt, arr(2).num.toInt)
-                case ("edit", (ujson.Arr(arr), _)) =>
+                case ("edit", Arr(arr), _) =>
                     manager.edit(arr(0).num.toInt, arr(1).num.toInt)
-                case ("rmv", (ujson.Arr(arr), _))           => manager.rmv(arr(0).num.toInt)
-                case ("execTop", (ujson.Arr(_), Some(num))) =>
+                case ("rmv", Arr(arr), _)           => manager.rmv(arr(0).num.toInt)
+                case ("execTop", Arr(_), Some(num)) =>
                     assertEquals(manager.execTop(), num)
                 case _ =>
             }

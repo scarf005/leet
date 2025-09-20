@@ -5,7 +5,7 @@ object Solution:
     extension (inline a: Int) inline def +%(inline b: Int): Int = (a + b) % MOD
 
     val as: Vector[Int] =
-        lazy val xs: LazyList[Int] = LazyList.fill(26)(1) #::: (xs `zip` xs.drop(1)).map(_ +% _)
+        lazy val xs: LazyList[Int] = LazyList.fill(26)(1) #::: (xs zip xs.drop(1)).map(_ +% _)
         xs.take(100100).toVector
 
     def lengthAfterTransformations(s: String, t: Int): Int =

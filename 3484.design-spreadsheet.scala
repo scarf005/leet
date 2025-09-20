@@ -42,12 +42,12 @@ class Suite extends FunSuite:
             val expected = read[List[Option[Int]]](input.expected)
 
             val sheet = Spreadsheet(0)
-            (task zip (value zip expected)).foreach {
-                case ("getValue", (Arr(arr), Some(num))) =>
+            (task lazyZip value lazyZip expected).foreach {
+                case ("getValue", Arr(arr), Some(num)) =>
                     assertEquals(sheet.getValue(arr.head.str), num)
-                case ("setCell", (Arr(arr), _)) =>
+                case ("setCell", Arr(arr), _) =>
                     sheet.setCell(arr.head.str, arr(1).num.toInt)
-                case ("resetCell", (Arr(arr), _)) => sheet.resetCell(arr.head.str)
-                case _                            =>
+                case ("resetCell", Arr(arr), _) => sheet.resetCell(arr.head.str)
+                case _                          =>
             }
     }

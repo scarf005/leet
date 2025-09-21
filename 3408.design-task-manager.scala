@@ -54,12 +54,12 @@ class Suite extends FunSuite:
         expected = "[null, null, null, 3, null, null, 5]",
       ),
     ).zipWithIndex.foreach { (input, index) =>
-        test(s"TaskManager #$index"):
-            val task = read[List[String]](input.task)
-            val value = read[List[Arr]](input.value)
-            val expected = read[List[Option[Int]]](input.expected)
+        val task = read[List[String]](input.task)
+        val value = read[List[Arr]](input.value)
+        val expected = read[List[Option[Int]]](input.expected)
+        val initValue = read[List[List[Int]]](value.head.arr.head.toString)
 
-            val initValue = read[List[List[Int]]](value.head.arr.head.toString)
+        test(s"TaskManager #$index"):
             val manager = TaskManager(initValue)
             (task lazyZip value lazyZip expected).tail.foreach {
                 case ("add", Arr(arr), _) =>

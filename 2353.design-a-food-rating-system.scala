@@ -45,22 +45,25 @@ class Suite extends FunSuite:
             """[null, null, "tjokfmxg", null, "tjokfmxg", "tjokfmxg", null, "cduc", "cduc", null, "cduc", null, "mnij"]""",
       ),
     ).zipWithIndex.foreach { (input, index) =>
-        test(s"FoodRatings #$index"):
-            val task = read[List[String]](input.task)
-            val value = read[List[Value]](input.value)
-            val expected = read[List[Option[String]]](input.expected)
+        val task = read[List[String]](input.task)
+        val value = read[List[Value]](input.value)
+        val expected = read[List[Option[String]]](input.expected)
+        val (head, tail) =
+            val ops = (task lazyZip value lazyZip expected)
+            (ops.head, ops.tail)
+        val init = head._2.arr
 
-            val init = value.head.arr
-            val obj = FoodRatings(
+        test(s"FoodRatings #$index"):
+            val ratings = FoodRatings(
               read[Array[String]](init(0).toString),
               read[Array[String]](init(1).toString),
               read[Array[Int]](init(2).toString),
             )
-            (task lazyZip value lazyZip expected).tail.foreach {
+            tail.foreach {
                 case ("highestRated", ujson.Arr(arr), Some(str)) =>
-                    assertEquals(obj.highestRated(arr.head.str), str)
+                    assertEquals(ratings.highestRated(arr.head.str), str)
                 case ("changeRating", ujson.Arr(arr), _) =>
-                    obj.changeRating(arr(0).str, arr(1).num.toInt)
+                    ratings.changeRating(arr(0).str, arr(1).num.toInt)
                 case _ =>
             }
     }

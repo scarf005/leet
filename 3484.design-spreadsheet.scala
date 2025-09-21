@@ -36,11 +36,11 @@ class Suite extends FunSuite:
         expected = "[null, 12, null, 16, null, 25, null, 15] ",
       ),
     ).zipWithIndex.foreach { (input, index) =>
-        test(s"Spreadsheet #$index"):
-            val task = read[List[String]](input.task)
-            val value = read[List[Arr]](input.value)
-            val expected = read[List[Option[Int]]](input.expected)
+        val task = read[List[String]](input.task)
+        val value = read[List[Arr]](input.value)
+        val expected = read[List[Option[Int]]](input.expected)
 
+        test(s"Spreadsheet #$index"):
             val sheet = Spreadsheet(0)
             (task lazyZip value lazyZip expected).foreach {
                 case ("getValue", Arr(arr), Some(num)) =>

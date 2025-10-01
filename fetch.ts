@@ -69,12 +69,16 @@ const fetchProblem = async (url?: string) => {
   const id = questionFrontendId.toString().padStart(4, "0")
   const scala = codeSnippets.find((s) => s.lang === "Scala")
   const path = `${id}.${titleSlug}.scala`
+  const code = scala?.code.replace(
+    /(?<before>.*)(?<brace>\{)(?<after>.*)/s,
+    `$<before>$<brace>\n      ???$<after>`,
+  )
   await Deno.writeTextFile(
     path,
     dedent`
       package leet.\`${id}\`
 
-      ${scala?.code}
+      ${code}
 
       import munit.FunSuite
 
@@ -82,13 +86,10 @@ const fetchProblem = async (url?: string) => {
           import Solution.*
           import upickle.default.*
 
-          // type Input = ???
           List(
           ).foreach { case (input, expected) =>
-              // val input = read[Input](input)
-              // test(s"<<name>>($input)"):
-              //     assertEquals(<<name>>(grid), expected)
-              ???
+              test(s"<<name>>($input)"):
+                  assertEquals(<<name>>(grid), expected)
           }
       `,
     { createNew: true },

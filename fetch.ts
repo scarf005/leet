@@ -68,11 +68,14 @@ const fetchProblem = async (url?: string) => {
 
   const id = questionFrontendId.toString().padStart(4, "0")
   const scala = codeSnippets.find((s) => s.lang === "Scala")
+  if (!scala) return
   const path = `${id}.${titleSlug}.scala`
-  const code = scala?.code.replace(
+  const code = scala.code.replace(
     /(?<before>.*)(?<brace>\{)(?<after>.*)/s,
     `$<before>$<brace>\n      ???$<after>`,
   )
+  const name = /def\s+(?<name>\w+)\s*\(.*\).*/.exec(scala.code)?.groups?.name
+
   await Deno.writeTextFile(
     path,
     dedent`
@@ -88,8 +91,8 @@ const fetchProblem = async (url?: string) => {
 
           List(
           ).foreach { case (input, expected) =>
-              test(s"<<name>>($input)"):
-                  assertEquals(<<name>>(grid), expected)
+              test(s"${name}($input)"):
+                  assertEquals(${name}(input), expected)
           }
       `,
     { createNew: true },

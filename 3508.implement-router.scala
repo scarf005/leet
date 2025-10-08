@@ -4,17 +4,12 @@ import collection.Searching.*
 import collection.mutable.{Set, SortedSet, Map, ArrayDeque, IndexedSeq}
 import scala.annotation.tailrec
 
-extension (res: SearchResult)
-    inline def toInt = res match
-        case Found(i)          => i
-        case InsertionPoint(i) => i
-
 extension [A](xs: collection.IndexedSeq[A])
     inline def bisectLeft[B >: A](elem: B)(using ord: Ordering[B]): SearchResult =
         @tailrec def go(low: Int, high: Int): SearchResult =
             if low >= high then InsertionPoint(low)
             else
-                val mid = (low + high) >>> 1
+                val mid = low + ((high - low) >>> 1)
                 if ord.lt(xs(mid), elem) then go(mid + 1, high) else go(low, mid)
         go(0, xs.length)
 
@@ -22,7 +17,7 @@ extension [A](xs: collection.IndexedSeq[A])
         @tailrec def go(low: Int, high: Int): SearchResult =
             if low >= high then InsertionPoint(low)
             else
-                val mid = (low + high) >>> 1
+                val mid = low + ((high - low) >>> 1)
                 if ord.lteq(xs(mid), elem) then go(mid + 1, high) else go(low, mid)
         go(0, xs.length)
 
@@ -56,7 +51,8 @@ class Router(val memoryLimit: Int):
     def getCount(destination: Int, start: Int, end: Int): Int =
         counts.get(destination) match
             case None     => 0
-            case Some(ts) => ts.bisectRight(end).toInt - ts.bisectLeft(start).toInt
+            case Some(ts) =>
+                ts.bisectRight(end).insertionPoint - ts.bisectLeft(start).insertionPoint
 
     override def toString(): String =
         s"""dups  : $dups

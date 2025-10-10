@@ -4,6 +4,7 @@ import { gray, green } from "@std/fmt/colors"
 import { dedent } from "@std/text/unstable-dedent"
 import { open } from "@opensrc/deno-open"
 import { Mobius } from "graphql-mobius"
+import $ from "@david/dax"
 
 const typeDefs = /* GraphQL */ `
   type CodeSnippet {
@@ -91,12 +92,13 @@ const fetchProblem = async (url?: string) => {
 
           List(
           ).foreach { case (input, expected) =>
-              test(s"${name}($input)"):
+              test(s"${name}($input) = $expected"):
                   assertEquals(${name}(input), expected)
           }
       `,
     { createNew: true },
   )
+  await $`scala fmt ${path}`.quiet()
   console.log(dedent`
     Fetched ${gray(`https://leetcode.com/problems/${titleSlug}`)}
     Created ${green(path)}

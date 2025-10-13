@@ -5,6 +5,7 @@ import { dedent } from "@std/text/unstable-dedent"
 import { open } from "@opensrc/deno-open"
 import { Mobius } from "graphql-mobius"
 import $ from "@david/dax"
+import { parseProblem } from "./_utils.ts"
 
 const typeDefs = /* GraphQL */ `
   type CodeSnippet {
@@ -106,8 +107,7 @@ const fetchProblem = async (url?: string) => {
 }
 
 const openInBrowser = async (path: string) => {
-  const regex = /^\d+\.(?<slug>.+)\.scala$/
-  const slug = regex.exec(path)?.groups?.slug
+  const slug = parseProblem(path)?.slug
   if (!slug) return
   await open(`https://leetcode.com/problems/${slug}`)
 }

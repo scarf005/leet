@@ -77,7 +77,7 @@ const fetchProblem = async (url?: string) => {
     `$<before>$<brace>\n      ???$<after>`,
   )
   const name = /def\s+(?<name>\w+)\s*\(.*\).*/.exec(scala.code)?.groups?.name
-
+  console.log(`Fetched ${gray(`https://leetcode.com/problems/${titleSlug}`)}`)
   await Deno.writeTextFile(
     path,
     dedent`
@@ -100,10 +100,7 @@ const fetchProblem = async (url?: string) => {
     { createNew: true },
   )
   await $`scala fmt ${path}`.quiet()
-  console.log(dedent`
-    Fetched ${gray(`https://leetcode.com/problems/${titleSlug}`)}
-    Created ${green(path)}
-  `)
+  console.log(`Created ${green(path)}`)
 }
 
 const openInBrowser = async (path: string) => {

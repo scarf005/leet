@@ -1,6 +1,7 @@
 package leet.`1161`
 
 import scala.collection.mutable.ArrayBuffer
+import leet.utils.Tree, Tree.TreeNode
 
 object Solution:
     def maxLevelSum(root: TreeNode): Int =
@@ -13,8 +14,6 @@ object Solution:
         dfs(root, 0)
         if sums.isEmpty then 0 else sums.zipWithIndex.maxBy(_._1)._2 + 1
 
-class TreeNode(var value: Int = 0, var left: TreeNode = null, var right: TreeNode = null)
-
 import munit.FunSuite
 
 class Suite extends FunSuite:
@@ -26,14 +25,5 @@ class Suite extends FunSuite:
       (input = "[989,null,10250,98693,-89388,null,null,null,-32127]", expected = 2),
     ).foreach { case (input, expected) =>
         test(s"maxLevelSum($input) = $expected"):
-            val xs = read[Vector[Integer]](input)
-            def buildTree(index: Integer): TreeNode =
-                if index >= xs.length || xs(index) == null then null
-                else
-                    val node = new TreeNode(xs(index))
-                    node.left = buildTree(2 * index + 1)
-                    node.right = buildTree(2 * index + 2)
-                    node
-            val root = buildTree(0)
-            assertEquals(maxLevelSum(root), expected)
+            assertEquals(maxLevelSum(Tree.byIndex(input)), expected)
     }

@@ -63,3 +63,35 @@ class Suite extends FunSuite:
                 assertEquals(uf.connected(a, b), expected)
             }
     }
+
+def memoize[I, O](f: (I => O)): I => O =
+    val cache = collection.mutable.HashMap.empty[I, O]
+    (key) => cache.getOrElseUpdate(key, f(key))
+
+object Tree:
+    class TreeNode(var value: Int = 0, var left: TreeNode = null, var right: TreeNode = null)
+
+    def byIndex(input: String): TreeNode =
+        val xs = upickle.default.read[Vector[Integer]](input)
+        def go(index: Integer): TreeNode =
+            if index >= xs.size || xs(index) == null then null
+            else new TreeNode(xs(index), go(2 * index + 1), go(2 * index + 2))
+        go(0)
+
+    def byQueue(input: String): TreeNode =
+        val xs = upickle.default.read[Vector[Integer]](input)
+        if xs.isEmpty || xs(0) == null then return null
+        val root = new TreeNode(xs(0))
+        val queue = collection.mutable.Queue[TreeNode](root)
+        var index = 1
+        while index < xs.size do
+            val node = queue.dequeue()
+            if xs(index) != null then
+                node.left = new TreeNode(xs(index))
+                queue += node.left
+            index += 1
+            if index < xs.size && xs(index) != null then
+                node.right = new TreeNode(xs(index))
+                queue += node.right
+            index += 1
+        root

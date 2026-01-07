@@ -3,7 +3,7 @@
     "semiColons": false
   },
   "tasks": {
-    "test": "scala test --watch project.scala"
+    "test": "scala test --watch project.scala utils.scala"
   },
   "imports": {
     "@cliffy/command": "jsr:@cliffy/command@1.0.0-rc.8",

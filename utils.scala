@@ -69,7 +69,7 @@ def memoize[I, O](f: (I => O)): I => O =
     (key) => cache.getOrElseUpdate(key, f(key))
 
 object Tree:
-    class TreeNode(var value: Int = 0, var left: TreeNode = null, var right: TreeNode = null)
+    case class TreeNode(var value: Int = 0, var left: TreeNode = null, var right: TreeNode = null)
 
     def byIndex(input: String): TreeNode =
         val xs = upickle.default.read[Vector[Integer]](input)
